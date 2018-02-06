@@ -40,50 +40,54 @@ function getStats(txt) {
         let uniqueWords = [];
         let word = "";
         let c;
-        for(c of txt) {
-            if(c.match(/^[0-9a-zA-Z]+$/)) {
-                word += c;
-            }
-            else {
-                if(word.length > 0) {
-                    wordLengths.push(word.length);
-                    txtInfo.nWords++;
-                    word = word.toLowerCase();
-                    if(uniqueWords.indexOf(word) === -1) {
-                        uniqueWords.push(word);
+        if(txtInfo.nChars !== 0) {
+            for (c of txt) {
+                if (c.match(/^[0-9a-zA-Z]+$/)) {
+                    word += c;
+                }
+                else {
+                    if (word.length > 0) {
+                        wordLengths.push(word.length);
+                        txtInfo.nWords++;
+                        word = word.toLowerCase();
+                        if (uniqueWords.indexOf(word) === -1) {
+                            uniqueWords.push(word);
+                        }
+                        if (isNaN(wordDict[word])) {
+                            wordDict[word] = 1;
+                        }
+                        else {
+                            wordDict[word]++;
+                        }
+                        word = "";
                     }
-                    if(isNaN(wordDict[word])) {
-                        wordDict[word] = 1;
-                    }
-                    else {
-                        wordDict[word]++;
-                    }
-                    word = "";
                 }
             }
-        }
-        if(c.match(/^[0-9a-zA-Z]+$/)) {
-            wordLengths.push(word.length);
-            txtInfo.nWords++;
-            word = word.toLowerCase();
-            if(uniqueWords.indexOf(word) === -1) {
-                uniqueWords.push(word);
-            }
-            if (isNaN(wordDict[word])) {
-                wordDict[word] = 1;
-            }
-            else {
-                wordDict[word]++;
+            if (c.match(/^[0-9a-zA-Z]+$/)) {
+                wordLengths.push(word.length);
+                txtInfo.nWords++;
+                word = word.toLowerCase();
+                if (uniqueWords.indexOf(word) === -1) {
+                    uniqueWords.push(word);
+                }
+                if (isNaN(wordDict[word])) {
+                    wordDict[word] = 1;
+                }
+                else {
+                    wordDict[word]++;
+                }
             }
         }
 
         //average word length
-        (function getAvgWordLength() {
-            for (let len of wordLengths) {
-                txtInfo.averageWordLength += len;
-            }
-            txtInfo.averageWordLength /= wordLengths.length;
-        })();
+        if(wordLengths.length !== 0) {
+            (function getAvgWordLength() {
+                for (let len of wordLengths) {
+                    txtInfo.averageWordLength += len;
+                }
+                txtInfo.averageWordLength /= wordLengths.length;
+            })();
+        }
 
         //palindromes
         (function getPalindromes() {
