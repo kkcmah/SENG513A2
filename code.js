@@ -16,20 +16,13 @@ function getStats(txt) {
 
     (function getLineInfo() {
         let lines = txt.split('\n');
-        let lineLength;
         txtInfo.nLines = txt.length === 0 ? 0 : lines.length;
         for(let l of lines) {
-            lineLength = 0;
             if(l.trim().length !== 0) {
                 txtInfo.nNonEmptyLines++;
             }
-            for(let c of l) {
-                if (c !== '\n') {
-                    lineLength++;
-                }
-            }
-            if(lineLength > txtInfo.maxLineLength) {
-                txtInfo.maxLineLength = lineLength;
+            if(l.length > txtInfo.maxLineLength) {
+                txtInfo.maxLineLength = l.length;
             }
         }
     })();
@@ -47,36 +40,32 @@ function getStats(txt) {
                 }
                 else {
                     if (word.length > 0) {
-                        wordLengths.push(word.length);
-                        txtInfo.nWords++;
-                        word = word.toLowerCase();
-                        if (uniqueWords.indexOf(word) === -1) {
-                            uniqueWords.push(word);
-                        }
-                        if (isNaN(wordDict[word])) {
-                            wordDict[word] = 1;
-                        }
-                        else {
-                            wordDict[word]++;
-                        }
-                        word = "";
+                        addToVars();
                     }
                 }
             }
+            //add the last word in the txt
+            //if the txt doesn't end with non alphanumeric
             if (c.match(/^[0-9a-zA-Z]+$/)) {
-                wordLengths.push(word.length);
-                txtInfo.nWords++;
-                word = word.toLowerCase();
-                if (uniqueWords.indexOf(word) === -1) {
-                    uniqueWords.push(word);
-                }
-                if (isNaN(wordDict[word])) {
-                    wordDict[word] = 1;
-                }
-                else {
-                    wordDict[word]++;
-                }
+                addToVars();
             }
+        }
+
+        //helper function to populate variables
+        function addToVars() {
+            wordLengths.push(word.length);
+            txtInfo.nWords++;
+            word = word.toLowerCase();
+            if (uniqueWords.indexOf(word) === -1) {
+                uniqueWords.push(word);
+            }
+            if (isNaN(wordDict[word])) {
+                wordDict[word] = 1;
+            }
+            else {
+                wordDict[word]++;
+            }
+            word = "";
         }
 
         //average word length
